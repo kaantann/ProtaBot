@@ -49,6 +49,8 @@ namespace ProtaBot_v1._0
                 Timeout = TimeSpan.FromMinutes(2)
             });
 
+            Client.Ready += OnClientReady;
+
             var commandsConfig = new CommandsNextConfiguration()
             {
                 StringPrefixes = new string[] { configJSON.Prefix },
@@ -66,12 +68,11 @@ namespace ProtaBot_v1._0
             await Task.Delay(-1); //in case of connection lost situation
         }
 
-
-
-        private Task OnClientReady(ReadyEventArgs e)
+        private Task OnClientReady(DiscordClient sender, ReadyEventArgs e)
         {
             return Task.CompletedTask;
         }
+
         private async Task OnCommandError(CommandsNextExtension sender, CommandErrorEventArgs e)
         {
 

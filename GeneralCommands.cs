@@ -16,7 +16,7 @@ namespace ProtaBot_v1._0
         [Command("hello")]
         public async Task TestCommand(CommandContext ctx)
         {
-            await ctx.Channel.SendMessageAsync($"Hello");
+            await ctx.Channel.SendMessageAsync($"Hello {ctx.Member.DisplayName}, have a nice day!");
         }
 
         [Command("formatcode")]
@@ -27,15 +27,16 @@ namespace ProtaBot_v1._0
 
         [Command("meme")]
         [Cooldown(1,30,CooldownBucketType.Channel)]
+        [RequirePermissions(Permissions.ManageChannels)]
         public async Task MemeCommand(CommandContext ctx)
         {
-            ulong id_forMemesOnly = 1086640856771076197;
+            //ulong id_forMemesOnly = 1086640856771076197;
 
-            if (ctx.Channel.Id != id_forMemesOnly)
-            {
-                await ctx.Channel.SendMessageAsync("I am not allowed to post memes in this channel.");
-                return;
-            }
+            //if (ctx.Channel.Id != id_forMemesOnly)
+            //{
+            //    await ctx.Channel.SendMessageAsync("I am not allowed to post memes in this channel.");
+            //    return;
+            //}
 
             var httpClient = new HttpClient();
             var response = await httpClient.GetStringAsync("https://www.reddit.com/r/memes/random.json");
@@ -126,6 +127,28 @@ namespace ProtaBot_v1._0
 
             await ctx.Channel.SendMessageAsync(resultsMessage); 
 
+        }
+
+        [Command("help")]
+        public async Task HelpCommand(CommandContext ctx)
+        {
+            string description = @"
+!!hello --> Salutes you
+
+!!formatcode <code> --> Converts your code format 
+
+!!poll <timeSec,Opt1,Opt2,Opt3,Opt4,Question> --> Creates a poll which has a stated time limit with 4 options
+
+!!meme --> Generates a random meme
+";
+
+            var embedHelpMessage = new DiscordMessageBuilder().AddEmbed(new DiscordEmbedBuilder()
+                .WithColor(DiscordColor.Azure)
+                .WithTitle("Help Menu")
+                .WithDescription(description)
+                );
+
+            await ctx.Channel.SendMessageAsync(embedHelpMessage);
         }
 
 
